@@ -3,6 +3,7 @@ package coinpurse;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Currency;
 
 //TODO import ArrayList and Collections (so you can use Collections.sort())
 
@@ -52,8 +53,8 @@ public class Purse {
 	 * @return the total value of items in the purse.
 	 */
 	public double getBalance() {
-		for (int i =0;i<=money.size()-1;i++) {
-			total += money.get(i).getValue();
+		for (Coin coin : money) {
+			total += coin.getValue();
 		}
 		return total;
 	}
@@ -75,7 +76,7 @@ public class Purse {
 	 * @return true if purse is full.
 	 */
 	public boolean isFull() {
-		if (money.size() >= capacity) {
+		if (money.size() == capacity) {
 			return true;
 		}
 		return false;
@@ -92,9 +93,11 @@ public class Purse {
 	public boolean insert(Coin coin) {
 		if (coin.getValue() <= 0) {
 			return false;
-		} else {
-			money.add(coin);
+		} else if (money.size() == capacity) {
+			return false;
 		}
+		money.add(coin);
+		Collections.sort(money);
 		return true;
 	}
 
@@ -109,40 +112,43 @@ public class Purse {
 	 *         withdraw requested amount.
 	 */
 	public Coin[] withdraw(double amount) {
-		// TODO don't allow to withdraw amount < 0
-
-		/*
-		 * See lab sheet for outline of a solution, or devise your own solution.
-		 */
-
-		// Did we get the full amount?
-		// This code assumes you decrease amount each time you remove a coin.
-		if (amount > 0) { // failed. Don't change the contents of the purse.
+		List<Coin> tempList = new ArrayList<Coin>();
+		if (amount < 0) {
 			return null;
 		}
+		for (int i = money.size() - 1; i >= 0; i--) {
+			if (money.get(i).getValue() <= amount) {
+				tempList.add(money.get(i));
+				amount -= money.get(i).getValue();
+				money.remove(i);
+				i--;
+			}
+			if (amount > 0) {
+				money.addAll(tempList);
+				return null;
+			}
+		}
 
-		// Success.
-		// Remove the coins you want to withdraw from purse,
-		// and return them as an array.
-		// Use list.toArray( array[] ) to copy a list into an array.
-		// toArray returns a reference to the array itself.
-		return new Coin[0]; // TODO replace this with real code
-	}
+		Coin[] totalList = new Coin[money.size()];
+		tempList.toArray(totalList);
+		return totalList;
+	} 
 
 	/**
 	 * toString returns a string description of the purse contents. It can
 	 * return whatever is a useful description.
 	 */
 	public String toString() {
-		// TODO complete this
-		return "you forgot to write Purse.toString()";
+		return "This pusrse have "+money.size()+" coin and balance is "+this.getBalance();
 	}
 
 	public static void main(String[] args) {
-		Purse p1 = new Purse(3);
-		p1.insert(new Coin(10));
-		p1.insert(new Coin(0));
-		p1.insert(new Coin(2));
-		System.out.println(p1.getBalance());
+		Purse purse = new Purse(3);
+		purse.insert(new Coin(1));
+		purse.insert(new Coin(10));
+		purse.insert(new Coin(1000));
+		purse.withdraw(10);
+		System.out.println(purse.toString());
+		
 	}
 }
