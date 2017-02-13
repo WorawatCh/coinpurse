@@ -12,7 +12,7 @@ import java.util.Currency;
  * balance, and check if the purse is full. When you withdraw money, the coin
  * purse decides which coins to remove.
  * 
- * @author your name
+ * @author Worawat Chueajedton
  */
 public class Purse {
 	/** Collection of objects in the purse. */

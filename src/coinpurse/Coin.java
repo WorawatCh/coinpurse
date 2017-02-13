@@ -1,10 +1,9 @@
 package coinpurse;
 
-//TODO fix this Javadoc. It should be written as a COMPLETE SENTENCE WITH PERIOD.
 /**
- * a coin with a monetary value and currency
+ * Coin represents coinage (money) with a fixed value and currency.
  * 
- * @author
+ * @author Worawat Chueajedton
  */
 // TODO declare that Coin implements Comparable<Coin>
 public class Coin implements Comparable<Coin> {
@@ -35,17 +34,32 @@ public class Coin implements Comparable<Coin> {
 		this.currency = DEFAULT_CURRENCY;
 	}
 
-	// TODO Write a getValue() method and javadoc.
+	/**
+	 * To get a value of the coin.
+	 * 
+	 * @return value of the coin
+	 */
 	public double getValue() {
 		return this.value;
 	}
 
-	// TODO Write a getCurrency() method and javadoc.
+	/**
+	 * To get a currency of the coin.
+	 * 
+	 * @return currency of coin
+	 */
 	public String getCurrency() {
 		return this.currency;
 	}
 
-	// TODO Write an equals(Object) method.
+	/**
+	 * To test that 2 coin have same value and currency
+	 * 
+	 * @param obj
+	 *            coin to test
+	 * 
+	 * @return true if there are the same false if there are not
+	 */
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
@@ -57,7 +71,17 @@ public class Coin implements Comparable<Coin> {
 		return false;
 	}
 
-	// TODO Write a compareTo method and implement Comparable.
+	/**
+	 * To compare 2 coin for test that which one is greater or less than another
+	 * one.
+	 * 
+	 * @param other
+	 *            coin to test
+	 * 
+	 * @return -1 is the first coin is greater 
+	 *          0 is there are the same 
+	 *          -1 is the second is greater
+	 */
 	@Override
 	public int compareTo(Coin other) {
 		if (other == null)
@@ -68,7 +92,9 @@ public class Coin implements Comparable<Coin> {
 		return this.currency.compareTo(other.currency);
 	}
 
-	// TODO write a toString() method. See labsheet for what to return.
+	/**
+	 * To describe result of a coin
+	 */
 	public String toString() {
 		return this.value + " " + this.currency;
 
