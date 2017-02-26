@@ -9,7 +9,7 @@ import java.util.Comparator;
  *
  */
 
-public class CompareByCurrency implements Comparator<Coin> {
+public class CompareByCurrency implements Comparator<Valuable> {
 	/**
 	 * This method will compare 2 coin if return-1 currency of c1 come first
 	 * return 0 if three are same currency and if return 1 currency of c2 come
@@ -22,12 +22,15 @@ public class CompareByCurrency implements Comparator<Coin> {
 	 * 
 	 * @return return -1 if currency of c1 come first 
 	 *         return 0 if three are same currency 
-	 *         return 1 if currency of c2 comefirst
+	 *         return 1 if currency of c2 come first
 	 * 
 	 * 
 	 * 
 	 */
-	public int compare(Coin c1, Coin c2) {
+
+	@Override
+	public int compare(Valuable c1, Valuable c2) {
 		return c1.getCurrency().compareToIgnoreCase(c2.getCurrency());
 	}
+
 }

@@ -16,6 +16,9 @@ public class ConsoleDialog {
 	// TODO How does this object get a Purse? DO NOT WRITE "new Purse(xx)".
 	private Purse purse;
 
+	private MoneyFactory moneyFactory = MoneyFactory.getInstance();
+	private Valuable valuable;
+
 	/**
 	 * Initialize a new Purse dialog.
 	 * 
@@ -63,13 +66,17 @@ public class ConsoleDialog {
 		Scanner scanline = new Scanner(inline);
 		while (scanline.hasNextDouble()) {
 			double value = scanline.nextDouble();
-			Coin coin = new Coin(value);
-			System.out.printf("Deposit %s... ", coin.toString());
-			boolean ok = purse.insert(coin);
-			System.out.println((ok ? "ok" : "FAILED"));
+			try {
+				valuable = moneyFactory.createMoney(value);
+				System.out.printf("Deposit %s... ", valuable.toString());
+				boolean ok = purse.insert(valuable);
+				System.out.println((ok ? "ok" : "FAILED"));
+			} catch (IllegalArgumentException ex) {
+				System.out.println("Sorry, " + value + " is not a valid amount.");
+				continue; // if inside a loop then go back to top
+			}
+			
 		}
-		if (scanline.hasNext())
-			System.out.println("Invalid input: " + scanline.next());
 	}
 
 	/**
@@ -80,7 +87,7 @@ public class ConsoleDialog {
 		System.out.print("How much to withdraw? ");
 		if (console.hasNextDouble()) {
 			double amount = console.nextDouble();
-			Coin[] coins = purse.withdraw(amount);
+			Valuable[] coins = purse.withdraw(amount);
 			if (coins == null)
 				System.out.printf("Sorry, couldn't withdraw %g %s\n", amount, CURRENCY);
 			else {

@@ -3,6 +3,7 @@ package coinpurse;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Currency;
 
 //TODO import ArrayList and Collections (so you can use Collections.sort())
@@ -23,7 +24,7 @@ public class Purse {
 	 * when the purse is created and cannot be changed.
 	 */
 	private final int capacity;
-	List<Coin> money = new ArrayList<Coin>();
+	List<Valuable> money = new ArrayList<Valuable>();
 	private int total = 0;
 
 	/**
@@ -53,7 +54,7 @@ public class Purse {
 	 * @return the total value of items in the purse.
 	 */
 	public double getBalance() {
-		for (Coin coin : money) {
+		for (Valuable coin : money) {
 			total += coin.getValue();
 		}
 		return total;
@@ -64,7 +65,6 @@ public class Purse {
 	 * 
 	 * @return the capacity
 	 */
-	// TODO write accessor method for capacity. Use Java naming convention.
 	public int getCapacity() {
 		return this.capacity;
 	}
@@ -76,10 +76,7 @@ public class Purse {
 	 * @return true if purse is full.
 	 */
 	public boolean isFull() {
-		if (money.size() == capacity) {
-			return true;
-		}
-		return false;
+		return count() >= capacity;
 	}
 
 	/**
@@ -90,14 +87,10 @@ public class Purse {
 	 *            is a Coin object to insert into purse
 	 * @return true if coin inserted, false if can't insert
 	 */
-	public boolean insert(Coin coin) {
-		if (coin.getValue() <= 0) {
+	public boolean insert(Valuable value) {
+		if (isFull() || value.getValue() == 0)
 			return false;
-		} else if (money.size() == capacity) {
-			return false;
-		}
-		money.add(coin);
-		Collections.sort(money);
+		money.add(value);
 		return true;
 	}
 
@@ -111,35 +104,42 @@ public class Purse {
 	 * @return array of Coin objects for money withdrawn, or null if cannot
 	 *         withdraw requested amount.
 	 */
-	public Coin[] withdraw(double amount) {
-		List<Coin> tempList = new ArrayList<Coin>();
+
+	public Valuable[] withdraw(double amount) {
+		Collections.sort(this.money, new Comparator<Valuable>() {
+			@Override
+			public int compare(Valuable o1, Valuable o2) {
+				return Double.compare(o1.getValue(), o2.getValue());
+			}
+		});
+		List<Valuable> templist = new ArrayList<Valuable>();
 		if (amount < 0) {
 			return null;
 		}
-		for (int i = money.size() - 1; i >= 0; i--) {
-			if (money.get(i).getValue() <= amount) {
-				tempList.add(money.get(i));
-				amount -= money.get(i).getValue();
-				money.remove(i);
-				i--;
+
+		for (Valuable value : money) {
+				if (amount >= value.getValue()) {
+					amount -= value.getValue();
+					templist.add(value);
+				}
 			}
 			if (amount > 0) {
-				money.addAll(tempList);
 				return null;
 			}
-		}
+			for (Valuable temp : templist) {
+				money.remove(temp);
+			}
+			Valuable[] withdraw = new Valuable[templist.size()];
+			return templist.toArray(withdraw);
 
-		Coin[] totalList = new Coin[money.size()];
-		tempList.toArray(totalList);
-		return totalList;
-	} 
+	}
 
 	/**
 	 * toString returns a string description of the purse contents. It can
 	 * return whatever is a useful description.
 	 */
 	public String toString() {
-		return "This pusrse have "+money.size()+" coin and balance is "+this.getBalance();
+		return "This pusrse have " + money.size() + " coin and balance is " + this.getBalance();
 	}
 
 	public static void main(String[] args) {
@@ -147,8 +147,16 @@ public class Purse {
 		purse.insert(new Coin(1));
 		purse.insert(new Coin(10));
 		purse.insert(new Coin(1000));
-		purse.withdraw(10);
+		purse.withdraw(100);
 		System.out.println(purse.toString());
-		
+
+	}
+
+	class CompareValue implements Comparator<Valuable> {
+
+		@Override
+		public int compare(Valuable o1, Valuable o2) {
+			return (int) Math.signum(o1.getValue() - o2.getValue());
+		}
 	}
 }
