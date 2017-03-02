@@ -120,9 +120,7 @@ public class CoinUtil {
 		for (double value : values)
 			if (value < 20) {
 				list.add(new Coin(value, currency));
-			} else {
-				list.add(new BankNote(value, currency));
-			}
+			} 
 		return list;
 	}
 

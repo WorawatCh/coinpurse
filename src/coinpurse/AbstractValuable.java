@@ -1,5 +1,12 @@
 package coinpurse;
 
+/**
+ * A abstract of valuable objects to get values and currency and comparing valuable
+ * objects.
+ * 
+ * @author Worawat Chueajedton
+ * 
+ */
 public class AbstractValuable implements Valuable, Comparable {
 	private double value;
 	private String currency;
@@ -7,7 +14,7 @@ public class AbstractValuable implements Valuable, Comparable {
 	public AbstractValuable(double value) {
 		this.value = value;
 	}
-	
+
 	public AbstractValuable(double value, String currency) {
 		this.value = value;
 		this.currency = currency;
